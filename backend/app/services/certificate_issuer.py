@@ -1,12 +1,12 @@
 """
-Aegis Guard Certificate Issuer (PDF generator)
+ciphernet Certificate Issuer (PDF generator)
 """
 
 import os
 import logging
 from fastapi import HTTPException
 
-logger = logging.getLogger("AegisGuard.CertificateIssuer")
+logger = logging.getLogger("ciphernet.CertificateIssuer")
 
 try:
     from fpdf import FPDF
@@ -93,7 +93,7 @@ def generate_pqc_certificate_pdf(target: str, pqc: dict, risk: dict) -> bytes:
     pdf.set_xy(8, 10)
     pdf.set_font(FONT, "B", 12)
     pdf.set_text_color(*GOLD)
-    pdf.cell(194, 7, "AEGISGUARD PQC SCANNER", 0, 2, "C")
+    pdf.cell(194, 7, "ciphernet PQC SCANNER", 0, 2, "C")
     pdf.set_font(FONT, "", 7)
     pdf.set_text_color(180, 200, 255)
     pdf.cell(194, 5, "QUANTUM-SAFE CRYPTOGRAPHIC SCANNER | CBOM GENERATOR", 0, 2, "C")
@@ -211,7 +211,7 @@ def generate_pqc_certificate_pdf(target: str, pqc: dict, risk: dict) -> bytes:
         ("Date of Issue", now.strftime("%Y-%m-%d")),
         ("Valid Until", now.replace(year=now.year + 1).strftime("%Y-%m-%d")),
         ("Certificate Serial", f"AG-{now.strftime('%Y%m%d')}-{abs(hash(target)) % 99999:05d}"),
-        ("Issuing Authority", "AegisGuard PQC Scanner"),
+        ("Issuing Authority", "ciphernet PQC Scanner"),
         ("Standard Refs", "NIST FIPS 203/204/205"),
         ("Scanner Version", "v2.1.0"),
     ]
@@ -263,7 +263,7 @@ def generate_pqc_certificate_pdf(target: str, pqc: dict, risk: dict) -> bytes:
     pdf.set_xy(25, y_sig + 14)
     pdf.set_font(FONT, "I", 6)
     pdf.set_text_color(*TEAL)
-    pdf.cell(70, 4, "AegisGuard PQC Scanner", 0, 0, "C")
+    pdf.cell(70, 4, "ciphernet PQC Scanner", 0, 0, "C")
     pdf.cell(20, 4, "", 0, 0)
     pdf.cell(70, 4, "NIST PQC Migration Program", 0, 1, "C")
 
@@ -271,6 +271,6 @@ def generate_pqc_certificate_pdf(target: str, pqc: dict, risk: dict) -> bytes:
     pdf.set_y(-12)
     pdf.set_font(FONT, "I", 7)
     pdf.set_text_color(*GOLD)
-    pdf.cell(0, 8, f"AegisGuard PQC Scanner  ·  NIST FIPS 203/204/205  ·  Page {pdf.page_no()}", 0, 0, "C")
+    pdf.cell(0, 8, f"ciphernet PQC Scanner  ·  NIST FIPS 203/204/205  ·  Page {pdf.page_no()}", 0, 0, "C")
 
     return bytes(pdf.output())
