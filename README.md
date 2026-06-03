@@ -1,8 +1,8 @@
-# AegisGuard PQC Scanner v2.1.0
+# ciphernet PQC Scanner v2.1.0
 
 **Quantum-Safe Cryptographic Scanner · CBOM Generator · PQC Certificate Issuer**
 
-AegisGuard scans TLS endpoints for post-quantum cryptography readiness, generates
+ciphernet scans TLS endpoints for post-quantum cryptography readiness, generates
 Cryptographic Bills of Materials (CBOM) in CycloneDX 1.6 format, and issues
 compliance certificates against NIST FIPS 203/204/205 standards.
 
