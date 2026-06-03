@@ -1,5 +1,5 @@
 """
-FastAPI Server — AegisGuard PQC Scanner
+FastAPI Server — ciphernet PQC Scanner
 All scan orchestration is handled inline (no external pipeline module).
 """
 
@@ -32,7 +32,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s │ %(name)-18s │ %(levelname)-7s │ %(message)s",
 )
-logger = logging.getLogger("AegisGuard.Main")
+logger = logging.getLogger("ciphernet.Main")
 
 # ---------------------------------------------------------------------------
 # App
