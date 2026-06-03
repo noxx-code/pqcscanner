@@ -6,7 +6,7 @@ import datetime
 import logging
 from backend.app.config import PORT_ASSET_MAP, is_pqc_sig
 
-logger = logging.getLogger("AegisGuard.CBOMGenerator")
+logger = logging.getLogger("ciphernet.CBOMGenerator")
 
 
 def generate_cbom(target: str, port: int, raw: dict, pqc: dict, risk: dict) -> dict:
@@ -139,11 +139,11 @@ def generate_cbom(target: str, port: int, raw: dict, pqc: dict, risk: dict) -> d
         "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
         "metadata": {
             "tool": {
-                "name": "AegisGuard PQC Scanner",
+                "name": "ciphernet PQC Scanner",
                 "version": "2.1.0",
-                "vendor": "AegisGuard",
+                "vendor": "ciphernet",
             },
-            "scanEngine": "AegisGuard Unified PQC Scanner",
+            "scanEngine": "ciphernet Unified PQC Scanner",
             "standard": metadata_standard,
         },
         "target": {
