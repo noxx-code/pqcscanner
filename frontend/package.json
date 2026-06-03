@@ -1,0 +1,6 @@
+{
+  "name": "aegisguard-frontend",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Static frontend — served by FastAPI. No build step required."
+}
