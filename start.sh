@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# AegisGuard PQC Scanner — Start Script
+# ciphernet PQC Scanner — Start Script
 set -euo pipefail
 
 cd "$(dirname "$0")"
 
 echo "╔══════════════════════════════════════════════════╗"
-echo "║  AegisGuard PQC Scanner                         ║"
+echo "║  ciphernet PQC Scanner                         ║"
 echo "╚══════════════════════════════════════════════════╝"
 
 # Create venv if missing
