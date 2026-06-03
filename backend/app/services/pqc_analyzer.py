@@ -5,12 +5,12 @@ PQC Analyzer (NIST FIPS 203/204/205 detection)
 import logging
 from backend.app.config import KNOWN_PQC_HOSTS, PQC_SAFE_ALGORITHMS, HYBRID_INDICATORS
 
-logger = logging.getLogger("AegisGuard.PQCAnalyzer")
+logger = logging.getLogger("ciphernet.PQCAnalyzer")
 
 
 def analyze_pqc(raw: dict) -> dict:
     """
-    AegisGuard PQC analysis — maps cipher + known-host heuristics to a
+    ciphernet PQC analysis — maps cipher + known-host heuristics to a
     structured PQC readiness result.
 
     Preserves BUG-1 / BUG-2 / BUG-11 fixes:
