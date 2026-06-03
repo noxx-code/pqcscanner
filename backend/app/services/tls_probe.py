@@ -1,5 +1,5 @@
 """
-Aegis TLS Probe Engine (Raw socket scanning)
+ciphernet TLS Probe Engine (Raw socket scanning)
 """
 
 import socket
@@ -10,7 +10,7 @@ import http.client
 import logging
 from backend.app.config import KNOWN_PQC_HOSTS
 
-logger = logging.getLogger("AegisGuard.TLSProbe")
+logger = logging.getLogger("ciphernet.TLSProbe")
 
 try:
     from OpenSSL import SSL, crypto as ossl_crypto
