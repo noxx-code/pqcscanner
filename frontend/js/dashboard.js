@@ -1,5 +1,5 @@
 /**
- * AegisGuard PQC Scanner — Dashboard Controller
+ * ciphernet PQC Scanner — Dashboard Controller
  * Vanilla JS — No frameworks, no dependencies.
  */
 
