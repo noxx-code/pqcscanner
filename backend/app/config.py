@@ -1,10 +1,10 @@
 """
-AegisGuard Configuration & Cryptographic Database
+ciphernet Configuration & Cryptographic Database
 """
 
 from typing import Dict, List, Set
 
-PROJECT_NAME = "AegisGuard PQC Scanner"
+PROJECT_NAME = "ciphernet PQC Scanner"
 VERSION = "2.1.0"
 
 PQC_SAFE_ALGORITHMS: List[str] = [
