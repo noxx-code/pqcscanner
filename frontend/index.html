@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AegisGuard PQC Scanner — Quantum-Safe Dashboard</title>
+  <meta name="description" content="AegisGuard Post-Quantum Cryptography Scanner: Real-time TLS analysis, NIST FIPS 203/204/205 compliance, CBOM generation, and PQC certification." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header class="app-header" id="app-header">
+      <div class="app-header__brand">
+        <div class="app-header__logo" aria-hidden="true">AG</div>
+        <div>
+          <div class="app-header__title">AegisGuard</div>
+          <div class="app-header__subtitle">Post-Quantum Cryptography Scanner</div>
+        </div>
+      </div>
+      <span class="app-header__version" id="header-version">v2.1.0</span>
+    </header>
+
+    <!-- ═══════════ SCAN BAR ═══════════ -->
+    <div class="scan-bar" id="scan-bar">
+      <div class="scan-bar__input-group">
+        <span class="scan-bar__icon" aria-hidden="true">🔍</span>
+        <input
+          type="text"
+          id="scan-target"
+          class="scan-bar__input"
+          placeholder="Enter domain (e.g. google.com, cloudflare.com)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <input
+        type="number"
+        id="scan-port"
+        class="scan-bar__port"
+        value="443"
+        min="1"
+        max="65535"
+        title="Port"
+      />
+      <button id="btn-scan" class="scan-bar__btn scan-bar__btn--primary" type="button">
+         Scan
+      </button>
+      <button id="btn-bulk" class="scan-bar__btn scan-bar__btn--secondary" type="button">
+        ☰ Bulk
+      </button>
+    </div>
+
+    <!-- ═══════════ STATUS BAR ═══════════ -->
+    <div class="status-bar" id="status-bar">
+      <span class="status-bar__dot"></span>
+      <span class="status-bar__label" id="status-label">Ready</span>
+      <span id="status-detail">Enter a domain above to begin scanning</span>
+    </div>
+
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <div class="dashboard" id="dashboard">
+
+      <!-- Empty state (shown before first scan) -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-state__icon">🛡️</div>
+        <h2 class="empty-state__title">No scan results yet</h2>
+        <p class="empty-state__desc">
+          Enter a domain above to analyze its TLS configuration,
+          post-quantum cryptography readiness, and NIST FIPS 203/204/205 compliance.
+        </p>
+      </div>
+
+      <!-- Grade Card -->
+      <section class="card grade-card hidden" id="grade-card">
+        <div class="card__header">
+          <h3 class="card__title">Security Grade</h3>
+          <span class="card__badge" id="grade-badge">—</span>
+        </div>
+        <div class="grade-display">
+          <div class="grade-ring">
+            <svg class="grade-ring__svg" viewBox="0 0 120 120" width="110" height="110">
+              <circle class="grade-ring__bg" cx="60" cy="60" r="52" />
+              <circle class="grade-ring__progress" id="grade-ring-progress"
+                cx="60" cy="60" r="52"
+                stroke-dasharray="326.73"
+                stroke-dashoffset="326.73" />
+            </svg>
+            <div class="grade-ring__label">
+              <span class="grade-ring__letter" id="grade-letter">—</span>
+              <span class="grade-ring__score" id="grade-score">0/100</span>
+            </div>
+          </div>
+          <div class="grade-meta">
+            <div class="grade-meta__item">
+              <span class="grade-meta__key">TLS Version</span>
+              <span class="grade-meta__val" id="meta-tls">—</span>
+            </div>
+            <div class="grade-meta__item">
+              <span class="grade-meta__key">KEM Type</span>
+              <span class="grade-meta__val" id="meta-kem-type">—</span>
+            </div>
+            <div class="grade-meta__item">
+              <span class="grade-meta__key">KEM Name</span>
+              <span class="grade-meta__val" id="meta-kem-name">—</span>
+            </div>
+            <div class="grade-meta__item">
+              <span class="grade-meta__key">Scan Time</span>
+              <span class="grade-meta__val" id="meta-scan-time">—</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PQC Donut Card -->
+      <section class="card pqc-card hidden" id="pqc-card">
+        <div class="card__header">
+          <h3 class="card__title">PQC Readiness</h3>
+          <span class="card__badge" id="pqc-badge">—</span>
+        </div>
+        <div class="donut-wrapper">
+          <canvas id="pqc-donut" class="donut-chart" width="120" height="120"></canvas>
+          <div class="donut-legend">
+            <div class="donut-legend__item">
+              <span class="donut-legend__dot donut-legend__dot--pqc"></span>
+              <span>PQC Safe</span>
+              <span class="donut-legend__pct" id="legend-pqc">0%</span>
+            </div>
+            <div class="donut-legend__item">
+              <span class="donut-legend__dot donut-legend__dot--partial"></span>
+              <span>Partial</span>
+              <span class="donut-legend__pct" id="legend-partial">0%</span>
+            </div>
+            <div class="donut-legend__item">
+              <span class="donut-legend__dot donut-legend__dot--vuln"></span>
+              <span>Vulnerable</span>
+              <span class="donut-legend__pct" id="legend-vuln">0%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trend Card -->
+      <section class="card trend-card hidden" id="trend-card">
+        <div class="card__header">
+          <h3 class="card__title">Risk Trend (7-Day)</h3>
+        </div>
+        <canvas id="trend-canvas" class="trend-chart" width="400" height="120"></canvas>
+      </section>
+
+      <!-- Findings Card -->
+      <section class="card findings-card hidden" id="findings-card">
+        <div class="card__header">
+          <h3 class="card__title">Security Findings</h3>
+        </div>
+        <div class="findings-tabs" id="findings-tabs">
+          <button class="findings-tab findings-tab--critical findings-tab--active" data-severity="critical">
+            Critical<span class="findings-tab__count" id="count-critical">0</span>
+          </button>
+          <button class="findings-tab findings-tab--high" data-severity="high">
+            High<span class="findings-tab__count" id="count-high">0</span>
+          </button>
+          <button class="findings-tab findings-tab--medium" data-severity="medium">
+            Medium<span class="findings-tab__count" id="count-medium">0</span>
+          </button>
+          <button class="findings-tab findings-tab--info" data-severity="info">
+            Info<span class="findings-tab__count" id="count-info">0</span>
+          </button>
+        </div>
+        <ul class="findings-list" id="findings-list"></ul>
+      </section>
+
+      <!-- Policy Card -->
+      <section class="card policy-card hidden" id="policy-card">
+        <div class="card__header">
+          <h3 class="card__title">Policy Compliance</h3>
+        </div>
+        <ul class="policy-list" id="policy-list"></ul>
+      </section>
+
+      <!-- Probe Card -->
+      <section class="card probe-card hidden" id="probe-card">
+        <div class="card__header">
+          <h3 class="card__title">Certificate Details</h3>
+        </div>
+        <div class="probe-grid" id="probe-grid"></div>
+      </section>
+
+    </div>
+
+    <!-- ═══════════ ACTION BUTTONS ═══════════ -->
+    <div class="actions-row hidden" id="actions-row">
+      <button class="action-btn action-btn--cbom" id="btn-cbom" disabled>
+         Export CBOM
+      </button>
+      <button class="action-btn action-btn--cert" id="btn-cert" disabled>
+         Download Certificate
+      </button>
+      <button class="action-btn" id="btn-raw" disabled>
+        { } View Raw JSON
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════ SCAN OVERLAY ═══════════ -->
+  <div class="scan-overlay" id="scan-overlay">
+    <div class="scan-spinner"></div>
+    <span class="scan-overlay__text" id="scan-overlay-text">Probing TLS handshake…</span>
+  </div>
+
+  <!-- ═══════════ BULK SCAN MODAL ═══════════ -->
+  <div class="modal-backdrop" id="bulk-backdrop"></div>
+  <div class="modal" id="bulk-modal">
+    <h3 class="modal__title">Bulk Scan</h3>
+    <p class="modal__desc">Enter one domain per line (max 20 targets)</p>
+    <textarea
+      id="bulk-targets"
+      class="modal__textarea"
+      placeholder="google.com&#10;cloudflare.com&#10;github.com"
+      spellcheck="false"
+    ></textarea>
+    <div class="modal__actions">
+      <button class="scan-bar__btn scan-bar__btn--secondary" id="btn-bulk-cancel" type="button">Cancel</button>
+      <button class="scan-bar__btn scan-bar__btn--primary" id="btn-bulk-run" type="button"> Scan All</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ TOAST CONTAINER ═══════════ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
